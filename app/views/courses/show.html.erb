@@ -1,0 +1,99 @@
+<div class="main-container" style="max-width: 900px; margin: 0 auto; padding: 40px 20px;">
+  
+  <%# 1. Header Card: Title, Description, and Trainer Actions %>
+  <div class="card detail-header" style="padding: 30px; border-radius: 16px; background: white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
+      <div style="flex: 1;">
+        <h1 style="font-size: 2.5rem; color: #1e293b; margin-bottom: 10px;"><%= @course.title %></h1>
+        <p style="color: #64748b; font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;">
+          <%= @course.description %>
+        </p>
+      </div>
+
+      <%# Instructor-only Management Buttons %>
+      <% if current_user&.instructor? && @course.user == current_user %>
+        <div class="instructor-actions" style="display: flex; gap: 10px;">
+          <%= link_to "Edit", edit_course_path(@course), class: "btn btn-outline-sm" %>
+          <%= link_to "+ Add Lesson", new_course_lesson_path(@course), class: "btn btn-primary" %>
+          <%= button_to "×", course_path(@course), 
+                        method: :delete, 
+                        data: { confirm: "Delete entire course and all lessons?" }, 
+                        class: "btn-delete-icon",
+                        title: "Delete Course" %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# 2. Enrollment Zone: Handles Guest, Student, and Trainer states %>
+    <div class="enrollment-zone" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+      <% if user_signed_in? %>
+        <% if current_user.student? %>
+          <% if current_user.enrolled_courses.include?(@course) %>
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; color: #15803d; font-weight: 600; display: inline-flex; align-items: center;">
+              <span style="margin-right: 8px;">✓</span> You are Enrolled
+            </div>
+          <% else %>
+            <%= button_to "Enroll Now", enrollments_path(course_id: @course.id), 
+                          method: :post, 
+                          class: "btn btn-primary", 
+                          style: "padding: 12px 30px;" %>
+          <% end %>
+        <% elsif current_user.instructor? && @course.user == current_user %>
+          <span style="font-size: 0.9rem; color: #94a3b8; font-style: italic;">You are viewing this as the Instructor.</span>
+        <% end %>
+      <% else %>
+        <%# GUEST VIEW: Login to Enroll CTA %>
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 20px; border-radius: 12px; text-align: center;">
+          <p style="color: #1e40af; font-weight: 600; margin-bottom: 10px;">Ready to start your journey?</p>
+          <%= link_to "Login to Enroll", new_user_session_path, 
+                      class: "btn btn-primary", 
+                      style: "display: inline-block; width: 100%; text-decoration: none; text-align: center;" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%# 3. Curriculum Section %>
+  <div class="curriculum-container" style="margin-top: 50px;">
+    <h2 style="margin-bottom: 25px; color: #1e293b; border-bottom: 3px solid #3b82f6; display: inline-block; padding-bottom: 5px;">
+      Course Curriculum
+    </h2>
+
+    <% if @course.lessons.any? %>
+      <div class="lesson-list" style="display: flex; flex-direction: column; gap: 15px;">
+        <% @course.lessons.each_with_index do |lesson, index| %>
+          <div class="card lesson-row" style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-left: 5px solid #3b82f6; background: white;">
+            <div style="display: flex; align-items: center; gap: 20px;">
+              <span style="font-size: 1.2rem; font-weight: 800; color: #cbd5e1;"><%= (index + 1).to_s.rjust(2, '0') %></span>
+              <span style="font-weight: 600; font-size: 1.1rem; color: #334155;"><%= lesson.title %></span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 15px;">
+              <%# Access Control: Only enrolled students or the teacher can view lesson content %>
+              <% if current_user&.instructor? || (user_signed_in? && current_user.enrolled_courses.include?(@course)) %>
+                <%= link_to "View Lesson", course_lesson_path(@course, lesson), class: "btn btn-outline-sm" %>
+                
+                <% if current_user&.instructor? && @course.user == current_user %>
+                  <%= button_to "×", course_lesson_path(@course, lesson), 
+                                method: :delete, 
+                                data: { confirm: "Delete this lesson?" }, 
+                                class: "btn-delete-icon" %>
+                <% end %>
+              <% else %>
+                <span style="color: #94a3b8; font-size: 0.9rem;">🔒 Locked</span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div style="text-align: center; padding: 50px; border: 2px dashed #e2e8f0; border-radius: 16px; color: #94a3b8;">
+        No lessons have been added yet.
+      </div>
+    <% end %>
+  </div>
+
+  <div style="margin-top: 30px; text-align: center;">
+    <%= link_to "← Back to All Courses", courses_path, style: "color: #64748b; text-decoration: none; font-size: 0.9rem;" %>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+<div class="lesson-viewer">
+  <%= link_to "← Back to Course", course_path(@lesson.course), class: "back-link" %>
+  
+  <div class="card lesson-card">
+    <h1><%= @lesson.title %></h1>
+    <hr>
+    
+    <% if current_user.instructor? || current_user.enrolled_courses.include?(@lesson.course) %>
+      <div class="lesson-body text-content">
+        <%= simple_format(@lesson.body) %>
+      </div>
+    <% else %>
+      <div class="locked-state">
+        <span class="icon">🔒</span>
+        <h2>Content Locked</h2>
+        <p>Please enroll in the course to access this lesson.</p>
+        <%= link_to "Go to Enrollment Page", course_path(@lesson.course), class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

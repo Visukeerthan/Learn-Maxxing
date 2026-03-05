@@ -1,0 +1,79 @@
+<div class="main-container">
+  
+  <%# 1. HERO SECTION: Welcoming the user %>
+  <section class="hero-section" style="text-align: center; padding: 60px 20px; background: linear-gradient(135.deg, #eff6ff 0%, #ffffff 100%); border-radius: 24px; margin-bottom: 50px; border: 1px solid #dbeafe;">
+    <h1 style="font-size: 3rem; color: #1e3a8a; margin-bottom: 15px; font-weight: 800;">
+      Master Your Craft with Learn Maxxing 🚀
+    </h1>
+    <p style="font-size: 1.25rem; color: #475569; max-width: 700px; margin: 0 auto 30px; line-height: 1.6;">
+      A high-performance learning management system built for the next generation of developers. 
+      Enroll in expert-led courses or start sharing your own knowledge today.
+    </p>
+    
+    <div style="display: flex; justify-content: center; gap: 15px;">
+      <% if current_user&.instructor? %>
+        <%= link_to "+ Create a Course", new_course_path, class: "btn btn-primary", style: "padding: 15px 30px; font-size: 1.1rem;" %>
+      <% elsif !user_signed_in? %>
+        <%= link_to "Get Started Now", new_user_registration_path, class: "btn btn-primary", style: "padding: 15px 30px; font-size: 1.1rem;" %>
+      <% end %>
+      <%= link_to "Browse Curriculum", "#course-grid", class: "btn btn-outline", style: "padding: 15px 30px; font-size: 1.1rem;" %>
+    </div>
+  </section>
+
+  <%# 2. FEATURE HIGHLIGHTS: Explaining the "Why" %>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 60px;">
+    <div class="feature-card" style="padding: 20px; text-align: center;">
+      <div style="font-size: 2rem; margin-bottom: 10px;">🛡️</div>
+      <h3 style="color: #1e293b;">Role-Based Access</h3>
+      <p style="color: #64748b; font-size: 0.95rem;">Secure separation between Instructors and Students using custom Ruby logic.</p>
+    </div>
+    <div class="feature-card" style="padding: 20px; text-align: center;">
+      <div style="font-size: 2rem; margin-bottom: 10px;">📈</div>
+      <h3 style="color: #1e293b;">Nested Resources</h3>
+      <p style="color: #64748b; font-size: 0.95rem;">Organized curriculum structure mapping lessons directly to courses for a seamless UX.</p>
+    </div>
+    <div class="feature-card" style="padding: 20px; text-align: center;">
+      <div style="font-size: 2rem; margin-bottom: 10px;">💾</div>
+      <h3 style="color: #1e293b;">MySQL Powered</h3>
+      <p style="color: #64748b; font-size: 0.95rem;">Robust relational data management ensuring referential integrity and speed.</p>
+    </div>
+  </div>
+
+  <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 50px;">
+
+  <%# 3. COURSE GRID %>
+  <div id="course-grid">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px;">
+      <div>
+        <h2 style="font-size: 2rem; color: #0f172a;">Available Courses</h2>
+        <p style="color: #64748b;">Choose a path and start your journey.</p>
+      </div>
+    </div>
+
+    <% if @courses.any? %>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px;">
+        <% @courses.each do |course| %>
+          <div class="card course-card" style="padding: 25px; display: flex; flex-direction: column; justify-content: space-between; height: 100%; border-top: 4px solid #3b82f6;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #3b82f6; background: #eff6ff; padding: 4px 10px; border-radius: 20px;">
+                  <%= course.lessons.count %> Lessons
+                </span>
+                <span style="font-size: 0.8rem; color: #94a3b8;">By <%= course.user.email.split('@').first %></span>
+              </div>
+              <h3 style="margin-bottom: 12px; font-size: 1.25rem;"><%= course.title %></h3>
+              <p style="color: #64748b; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px;">
+                <%= truncate(course.description, length: 120) %>
+              </p>
+            </div>
+            <%= link_to "View Course Details →", course_path(course), class: "btn btn-outline", style: "width: 100%; text-align: center;" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div style="text-align: center; padding: 60px; background: #f8fafc; border-radius: 16px;">
+        <p style="color: #64748b; font-size: 1.1rem;">No courses are live yet. Be the first to create one!</p>
+      </div>
+    <% end %>
+  </div>
+</div>
