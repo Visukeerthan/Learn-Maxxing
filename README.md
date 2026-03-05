@@ -1,24 +1,23 @@
-# README
+# Learn Maxxing 🚀
+**A Lightweight Learning Management System (LMS) built with Ruby on Rails.**
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Learn Maxxing is a functional LMS platform designed for performance and simplicity. It allows instructors to manage courses and students to explore learning materials through a clean, responsive interface.
 
-Things you may want to cover:
+## 🌟 Features
+- **Course Management:** Full CRUD (Create, Read, Update, Delete) functionality for courses.
+- **Responsive UI:** Custom CSS Grid and Flexbox layout that works perfectly on mobile, tablet, and desktop.
+- **Secure Authentication:** Built-in user session management (via custom Session logic / Devise).
+- **Relational Database:** Powered by MySQL with a focus on optimized ActiveRecord queries.
 
-* Ruby version
+## 🛠️ Tech Stack
+- **Backend:** Ruby on Rails 7
+- **Frontend:** Hotwire (Turbo/Stimulus), Custom CSS (No heavy frameworks for maximum speed)
+- **Database:** MySQL (Local) / PostgreSQL (Production)
+- **Deployment:** Render / GitHub
 
-* System dependencies
+## 🚀 Local Setup
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/Visukeerthan/Learn-Maxxing.git](https://github.com/Visukeerthan/Learn-Maxxing.git)
+   cd Learn-Maxxing
