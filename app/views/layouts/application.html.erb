@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Learn Maxxing 🚀</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    
+    <%# CRITICAL: This allows the DELETE method for Logout to work via JavaScript %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <%= link_to "LEARN MAXXING 🚀", root_path, class: "nav-logo" %>
+        
+        <div class="nav-links">
+          <%= link_to "All Courses", courses_path %>
+          
+          <% if user_signed_in? %>
+            <span class="user-badge"><%= current_user.role.capitalize %></span>
+            
+            <%# The 'data-turbo-method' is the modern Rails way to Sign Out %>
+            <%= link_to "Logout", destroy_user_session_path, 
+                        data: { turbo_method: :delete }, 
+                        class: "nav-logout" %>
+          <% else %>
+            <%= link_to "Login", new_user_session_path, class: "btn-nav" %>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <%# Flash messages for Success/Errors (e.g., "Signed out successfully") %>
+      <% if notice %>
+        <div class="flash notice"><%= notice %></div>
+      <% end %>
+      
+      <% if alert %>
+        <div class="flash alert"><%= alert %></div>
+      <% end %>
+
+      <%= yield %>
+    </div>
+  </body>
+</html>
